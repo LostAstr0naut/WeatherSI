@@ -7,4 +7,4 @@ Client downloads live GIF image from <a href="http://www.arso.gov.si/vreme/napov
 # Usage
 **Build** binary from `src` folder and **run** it with **x**, **y** and **radious** arguments. Arguments are **not** optional and need to be provided in **pixels** and also **must be relative to the entire image**. 
 
-**Example:** ```/bin/weatherapp {x} {y} {radious}```
+**Example:** ```/bin/rainfallrate {x} {y} {radious}```
