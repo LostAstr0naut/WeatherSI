@@ -8,13 +8,13 @@ import (
 	"strconv"
 	"time"
 
-	"weather/src/providers/rainfallrate"
+	"rainfallrate/src/services/rainfall"
 )
 
 const dataURL = "http://www.arso.gov.si/vreme/napovedi%20in%20podatki/radar_anim.gif"
 
 func main() {
-	log.Println("Running weather app...")
+	log.Println("Running rainfall rate app...")
 
 	args := os.Args[1:]
 	if len(args) < 3 {
@@ -38,7 +38,7 @@ func main() {
 	y2 := int(argsY + argsRadius)
 
 	// Initialize services.
-	rainfallRateService := rainfallrate.New()
+	rainfallRateService := rainfall.New()
 
 	for true {
 		// Get gif data.

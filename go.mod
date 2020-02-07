@@ -1,3 +1,3 @@
-module weather
+module rainfallrate
 
 go 1.13

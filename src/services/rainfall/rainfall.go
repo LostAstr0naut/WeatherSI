@@ -1,4 +1,4 @@
-package rainfallrate
+package rainfall
 
 import "image/color"
 
