@@ -1,4 +1,4 @@
-# WeatherSI
+# RainfallRateSI
 Client for checking rainfall rate image provided by ARSO (Slovenian government).
 
 # How it works
