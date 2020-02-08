@@ -4,7 +4,7 @@ import "image/color"
 
 // Service represents a service interface for rainfall rate levels.
 type Service interface {
-	GetLevelByRGBA(uint16, uint16, uint16) float64
+	GetLevelByRGBA(r, g, b uint16) float64
 }
 
 type service struct {

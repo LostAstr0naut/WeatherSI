@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"rainfallrate/src/services/output"
 	"rainfallrate/src/services/rainfall"
 )
 
@@ -32,10 +33,15 @@ func main() {
 	}
 
 	// Calculate pixel window.
+	xLocation := int(argsX)
+	yLocation := int(argsY)
 	x1 := int(argsX - argsRadius)
 	y1 := int(argsY - argsRadius)
 	x2 := int(argsX + argsRadius)
 	y2 := int(argsY + argsRadius)
+
+	// Initialize mappers.
+	outputMapper := output.NewMapper()
 
 	// Initialize services.
 	rainfallRateService := rainfall.New()
@@ -56,21 +62,25 @@ func main() {
 		dataImages := dataGif.Image
 
 		// Loop through each gif image.
-		highestRateLevel := 0.0
+		highestAreaRateLevel := 0.0
+		highestLocationRateLevel := 0.0
 		for _, item := range dataImages {
 			if item != nil {
 				for y := y1; y <= y2; y++ {
 					for x := x1; x <= x2; x++ {
 						r, g, b, _ := item.At(x, y).RGBA()
 						level := rainfallRateService.GetLevelByRGBA(uint16(r), uint16(g), uint16(b))
-						if highestRateLevel < level {
-							highestRateLevel = level
+						if x == xLocation && y == yLocation && highestLocationRateLevel < level {
+							highestLocationRateLevel = level
+						}
+						if highestAreaRateLevel < level {
+							highestAreaRateLevel = level
 						}
 					}
 				}
 			}
 		}
-		log.Printf("%f", highestRateLevel)
+		log.Println(outputMapper.ToOutputModel(highestAreaRateLevel, highestLocationRateLevel))
 
 		// Sleep for the next five minutes
 		time.Sleep(time.Duration(time.Minute * 5))
