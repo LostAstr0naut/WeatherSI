@@ -17,7 +17,7 @@ type Level struct {
 	Value float64
 }
 
-// New return a new rainfallrate Provider.
+// New return a new rainfallrate mapper.
 func New() Mapper {
 	helper := &mapper{}
 	helper.ensureLevels()

@@ -41,10 +41,8 @@ func main() {
 	y2 := int(argsY + argsRadius)
 
 	// Initialize mappers.
-	outputMapper := output.NewMapper()
-
-	// Initialize services.
-	rainfallRateService := rainfall.New()
+	outputMapper := output.New()
+	rainfallRateMapper := rainfall.New()
 
 	for true {
 		// Get gif data.
@@ -69,7 +67,7 @@ func main() {
 				for y := y1; y <= y2; y++ {
 					for x := x1; x <= x2; x++ {
 						r, g, b, _ := item.At(x, y).RGBA()
-						level := rainfallRateService.GetLevelByRGBA(uint16(r), uint16(g), uint16(b))
+						level := rainfallRateMapper.GetLevelByRGBA(uint16(r), uint16(g), uint16(b))
 						if x == xLocation && y == yLocation && highestLocationRateLevel < level {
 							highestLocationRateLevel = level
 						}

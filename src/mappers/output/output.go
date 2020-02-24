@@ -13,8 +13,8 @@ type Mapper interface {
 
 type mapper struct{}
 
-// NewMapper returns a new instance of mapper.
-func NewMapper() Mapper {
+// New returns a new instance of output mapper.
+func New() Mapper {
 	return mapper{}
 }
 
