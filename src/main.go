@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	"rainfallrate/src/services/output"
-	"rainfallrate/src/services/rainfall"
+	"rainfallrate/src/mappers/output"
+	"rainfallrate/src/mappers/rainfall"
 )
 
 const dataURL = "http://www.arso.gov.si/vreme/napovedi%20in%20podatki/radar_anim.gif"

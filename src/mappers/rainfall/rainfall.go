@@ -2,12 +2,12 @@ package rainfall
 
 import "image/color"
 
-// Service represents a service interface for rainfall rate levels.
-type Service interface {
+// Mapper represents a mapper interface for rainfall rate levels.
+type Mapper interface {
 	GetLevelByRGBA(r, g, b uint16) float64
 }
 
-type service struct {
+type mapper struct {
 	Levels []Level
 }
 
@@ -18,14 +18,14 @@ type Level struct {
 }
 
 // New return a new rainfallrate Provider.
-func New() Service {
-	helper := &service{}
+func New() Mapper {
+	helper := &mapper{}
 	helper.ensureLevels()
 	return helper
 }
 
 // GetLevelByRGBA returns a warning level in rgba searching by rgba.
-func (w *service) GetLevelByRGBA(r, g, b uint16) float64 {
+func (w *mapper) GetLevelByRGBA(r, g, b uint16) float64 {
 	for _, item := range w.Levels {
 		if item.Color.R == r && item.Color.G == g && item.Color.B == b {
 			return item.Value
@@ -34,7 +34,7 @@ func (w *service) GetLevelByRGBA(r, g, b uint16) float64 {
 	return 0
 }
 
-func (w *service) ensureLevels() {
+func (w *mapper) ensureLevels() {
 	w.Levels = append(w.Levels, createLevel(2056, 23130, 65278, 0.25))
 	w.Levels = append(w.Levels, createLevel(0, 35980, 65278, 0.5))
 	w.Levels = append(w.Levels, createLevel(0, 44718, 65021, 0.75))
