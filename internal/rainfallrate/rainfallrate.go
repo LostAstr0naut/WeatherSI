@@ -7,7 +7,7 @@ import (
 
 // Service represents service interface for rainfall rate levels.
 type Service interface {
-	GetLevelByRGBA(r, g, b uint16) (*Level, error)
+	GetLevelByRGBA(r, g, b uint16) (Level, error)
 }
 
 type service struct {
@@ -28,13 +28,13 @@ func New() Service {
 }
 
 // GetLevelByRGBA returns a warning level in rgba searching by rgba.
-func (s *service) GetLevelByRGBA(r, g, b uint16) (*Level, error) {
+func (s *service) GetLevelByRGBA(r, g, b uint16) (Level, error) {
 	for _, level := range s.Levels {
 		if level.Color.R == r && level.Color.G == g && level.Color.B == b {
-			return &level, nil
+			return level, nil
 		}
 	}
-	return nil, errors.New("level not found")
+	return Level{}, errors.New("level not found")
 }
 
 func (s *service) ensureLevels() {

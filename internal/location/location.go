@@ -1,10 +1,12 @@
 package location
 
-import "errors"
+import (
+	"errors"
+)
 
 // Service represents a location interface.
 type Service interface {
-	GetCoordinates(name string) (*Location, error)
+	GetCoordinates(name string) (Location, error)
 }
 
 type service struct {
@@ -25,14 +27,14 @@ type Location struct {
 	Y    int32
 }
 
-func (s *service) GetCoordinates(name string) (*Location, error) {
+func (s *service) GetCoordinates(name string) (Location, error) {
 	for _, location := range s.locations {
 		if location.Name == name {
-			return &location, nil
+			return location, nil
 		}
 	}
 
-	return nil, errors.New("location not found")
+	return Location{}, errors.New("location not found")
 }
 
 func (s *service) ensureLocations() {
