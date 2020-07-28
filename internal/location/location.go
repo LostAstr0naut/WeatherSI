@@ -43,7 +43,7 @@ func (s *service) ensureLocations() {
 	s.locations = append(s.locations, createLocation("JE", 300, 268))
 	s.locations = append(s.locations, createLocation("PO", 325, 417))
 	s.locations = append(s.locations, createLocation("KR", 346, 311))
-	s.locations = append(s.locations, createLocation("KR", 373, 350))
+	s.locations = append(s.locations, createLocation("LJ", 373, 350))
 	s.locations = append(s.locations, createLocation("KO", 424, 445))
 	s.locations = append(s.locations, createLocation("TB", 454, 332))
 	s.locations = append(s.locations, createLocation("SG", 459, 252))
