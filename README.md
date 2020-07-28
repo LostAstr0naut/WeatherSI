@@ -1,10 +1,8 @@
 # RainfallRateSI
-Client for checking rainfall rate image provided by ARSO (Slovenian government).
+Library for checking rainfall rate image provided by ARSO.
+
+# Help
+The returned values are corresponding to the legend in the upper right of the <a href="http://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif">GIF image</a>.
 
 # How it works
-Client downloads <a href="http://www.arso.gov.si/vreme/napovedi%20in%20podatki/radar_anim.gif">GIF image</a> every five minutes and processes it, as that's the rate that ARSO updates it at. It looks for highest rainfall rate in given area (`x`, `y` and `radious`) and prints out seperately **area** and **location** rainfall rate level in `float` (same as the numbers on the upper right legend on the image).
-
-# Usage
-**Build** binary from `src` folder and **run** it with **x**, **y** and **radious** arguments. Arguments are **not** optional and need to be provided in **pixels** and also **must be relative to the entire image**. 
-
-**Example:** ```/bin/rainfallrate {x} {y} {radious}```
+It downloads the provided <a href="http://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif">GIF image</a> and looks for highest rainfall rate in given location and returns highest **area** and **location** rainfall rate level.
