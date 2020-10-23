@@ -1,3 +1,3 @@
-module rainfallratesi
+module arsoweatherimage
 
 go 1.14

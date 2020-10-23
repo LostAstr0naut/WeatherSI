@@ -1,10 +1,11 @@
-package rainfallratesi
+package arsoweatherimage
 
 import (
 	"image/gif"
 	"net/http"
-	"rainfallratesi/internal/location"
-	"rainfallratesi/internal/rainfallrate"
+
+	"arsoweatherimage/arso/internal/location"
+	"arsoweatherimage/arso/internal/rainfallrate"
 )
 
 const (
@@ -13,7 +14,7 @@ const (
 	radiousInner = 5
 )
 
-// GetRainfallRateLevels returns a rainfall rate level based on parameters. Returns highest area level and highest location level.
+// GetRainfallRateLevels returns a rainfall rate level based on parameters
 func GetRainfallRateLevels(locationName string) (rainfallrate.Level, rainfallrate.Level, error) {
 	rainfallRateSvc := rainfallrate.New()
 	locationSvc := location.New()
@@ -44,8 +45,8 @@ func GetRainfallRateLevels(locationName string) (rainfallrate.Level, rainfallrat
 	}
 	dataImages := dataGif.Image
 
-	highestAreaRateLevel := rainfallrate.Level{}
-	highestLocationRateLevel := rainfallrate.Level{}
+	highestInAreaRateLevel := rainfallrate.Level{}
+	highestOnLocationRateLevel := rainfallrate.Level{}
 	for _, item := range dataImages {
 		if item != nil {
 			for y := y1; y <= y2; y++ {
@@ -59,15 +60,15 @@ func GetRainfallRateLevels(locationName string) (rainfallrate.Level, rainfallrat
 						y >= y1Inner &&
 						x <= x2Inner &&
 						y <= y2Inner &&
-						highestLocationRateLevel.Value < level.Value {
-						highestLocationRateLevel = level
+						highestOnLocationRateLevel.Value < level.Value {
+						highestOnLocationRateLevel = level
 					}
-					if highestAreaRateLevel.Value < level.Value {
-						highestAreaRateLevel = level
+					if highestInAreaRateLevel.Value < level.Value {
+						highestInAreaRateLevel = level
 					}
 				}
 			}
 		}
 	}
-	return highestAreaRateLevel, highestLocationRateLevel, nil
+	return highestInAreaRateLevel, highestOnLocationRateLevel, nil
 }
