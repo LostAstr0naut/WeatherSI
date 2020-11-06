@@ -4,8 +4,8 @@ import (
 	"image/gif"
 	"net/http"
 
-	"arsoweatherimage/arso/internal/location"
-	"arsoweatherimage/arso/internal/rainfallrate"
+	"github.com/LostAstr0naut/arsoweatherimage/internal/location"
+	"github.com/LostAstr0naut/arsoweatherimage/internal/rainfallrate"
 )
 
 const (
