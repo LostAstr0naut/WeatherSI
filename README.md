@@ -1,4 +1,4 @@
-# ARSOWeatherImageAPI
+# ARSOWeatherImage
 Library which converts ARSO weather image to data for given input.
 
 # Example
