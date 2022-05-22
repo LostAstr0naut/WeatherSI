@@ -57,7 +57,7 @@ func RainfallRate(locationName string) (rainfallrate.Level, rainfallrate.Level, 
 		return rainfallrate.Level{}, rainfallrate.Level{}, err
 	}
 
-	return locationRainRate(foundLocation, dataImages, radious, radiousInner)
+	return locationRainfallRate(foundLocation, dataImages, radious, radiousInner)
 }
 
 func rainfallRateImages(dataURL string) ([]*image.Paletted, error) {
@@ -74,7 +74,7 @@ func rainfallRateImages(dataURL string) ([]*image.Paletted, error) {
 	return dataGif.Image, nil
 }
 
-func locationRainRate(location location.Location, dataImages []*image.Paletted, radious, radiousInner int) (rainfallrate.Level, rainfallrate.Level, error) {
+func locationRainfallRate(location location.Location, dataImages []*image.Paletted, radious, radiousInner int) (rainfallrate.Level, rainfallrate.Level, error) {
 	xLocation := int(location.X)
 	yLocation := int(location.Y)
 
