@@ -1,18 +1,15 @@
 # ARSOWeatherImage
-Library which converts ARSO weather image to data for given input.
+Converts ARSO weather image to string data for given location.
 
 # Example
 ```golang
-area, location, err := arsoweatherimage.GetRainfallRateLevels("MB")
+location, area, err := arsoweatherimage.RainfallRateLevels(arsoweatherimage.Maribor)
 if err != nil {
   log.Fatal(err)
 }
 
-log.Println(area.Value, location.Value)
+log.Println(location.Value, area.Value)
 ```
 
-# Help
-Only abbreviated names of places are supported. You can find them on the <a href="http://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif">GIF image</a>. The returned values are corresponding to the legend in the upper right of the image.
-
 # How it works
-It downloads the provided <a href="http://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif">GIF image</a> and looks for highest rainfall rate in given location and returns highest **in area** and **on location** rainfall rate level.
+<a href="http://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif">GIF image</a> is downloaded and scanned for the highest rainfall rate for the given location. Highest **on location** and **surrounding area** rainfall rates are returned.

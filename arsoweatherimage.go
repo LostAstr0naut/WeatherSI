@@ -11,6 +11,25 @@ import (
 )
 
 const (
+	// Supported location names.
+	Bohinj        = "BO"
+	Gorica        = "GO"
+	Koper         = "KP"
+	Idrija        = "ID"
+	Jesenice      = "JE"
+	Postojna      = "PO"
+	Kranj         = "KR"
+	Ljubljana     = "LJ"
+	Kocevje       = "KO"
+	Trbovlje      = "TB"
+	SlovenjGradec = "SG"
+	NovoMesto     = "NM"
+	Celje         = "CE"
+	Krsko         = "KK"
+	Maribor       = "MB"
+	Ptuj          = "PT"
+	MurskaSobota  = "MS"
+
 	// the image resource URL
 	dataURL = "http://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif"
 
