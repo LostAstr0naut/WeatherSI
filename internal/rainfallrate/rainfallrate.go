@@ -5,31 +5,16 @@ import (
 	"image/color"
 )
 
-// Service represents service interface for rainfall rate levels.
-type Service interface {
-	GetLevelByRGBA(r, g, b uint16) (Level, error)
-}
-
-type service struct {
-	Levels []Level
-}
-
 // Level represents a rainfall rate level.
 type Level struct {
-	Color color.RGBA64
-	Value float64
+	Color       color.RGBA64
+	Value       float64
+	Description string
 }
 
-// New return a new rainfallrate service.
-func New() Service {
-	intance := &service{}
-	intance.ensureLevels()
-	return intance
-}
-
-// GetLevelByRGBA returns a warning level in rgba searching by rgba.
-func (s *service) GetLevelByRGBA(r, g, b uint16) (Level, error) {
-	for _, level := range s.Levels {
+// LevelByRGBA returns a warning level in rgba.
+func LevelByRGBA(r, g, b uint16) (Level, error) {
+	for _, level := range colorLevels() {
 		if level.Color.R == r && level.Color.G == g && level.Color.B == b {
 			return level, nil
 		}
@@ -37,32 +22,157 @@ func (s *service) GetLevelByRGBA(r, g, b uint16) (Level, error) {
 	return Level{}, errors.New("level not found")
 }
 
-func (s *service) ensureLevels() {
-	s.Levels = append(s.Levels, createLevel(2056, 23130, 65278, 0.25))
-	s.Levels = append(s.Levels, createLevel(0, 35980, 65278, 0.5))
-	s.Levels = append(s.Levels, createLevel(0, 44718, 65021, 0.75))
-	s.Levels = append(s.Levels, createLevel(0, 51400, 65278, 1))
-	s.Levels = append(s.Levels, createLevel(1028, 55512, 33667, 1.5))
-	s.Levels = append(s.Levels, createLevel(16962, 60395, 16962, 2))
-	s.Levels = append(s.Levels, createLevel(27756, 63993, 0, 3.5))
-	s.Levels = append(s.Levels, createLevel(47288, 64250, 0, 5))
-	s.Levels = append(s.Levels, createLevel(63993, 64250, 0, 10))
-	s.Levels = append(s.Levels, createLevel(65278, 50886, 0, 15))
-	s.Levels = append(s.Levels, createLevel(65278, 33924, 0, 32.5))
-	s.Levels = append(s.Levels, createLevel(65535, 15934, 257, 50))
-	s.Levels = append(s.Levels, createLevel(54227, 0, 0, 75))
-	s.Levels = append(s.Levels, createLevel(46517, 771, 771, 100))
-	s.Levels = append(s.Levels, createLevel(52171, 0, 52428, 150))
-}
-
-func createLevel(r, g, b uint16, value float64) Level {
-	return Level{
-		Color: color.RGBA64{
-			R: r,
-			G: g,
-			B: b,
-			A: 0, // Disregard alpha.
+func colorLevels() []Level {
+	return []Level{
+		{
+			Color: color.RGBA64{
+				R: 2056,
+				G: 23130,
+				B: 65278,
+				A: 0, // Disregard alpha on all.
+			},
+			Value:       0.25,
+			Description: "Light rainfall.",
 		},
-		Value: value,
+		{
+			Color: color.RGBA64{
+				R: 0,
+				G: 35980,
+				B: 65278,
+				A: 0,
+			},
+			Value:       0.5,
+			Description: "Light rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 0,
+				G: 44718,
+				B: 65021,
+				A: 0,
+			},
+			Value:       0.75,
+			Description: "Light rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 0,
+				G: 51400,
+				B: 65278,
+				A: 0,
+			},
+			Value:       1,
+			Description: "Light rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 1028,
+				G: 55512,
+				B: 33667,
+				A: 0,
+			},
+			Value:       1.5,
+			Description: "Moderate rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 16962,
+				G: 60395,
+				B: 16962,
+				A: 0,
+			},
+			Value:       2,
+			Description: "Moderate rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 27756,
+				G: 63993,
+				B: 0,
+				A: 0,
+			},
+			Value:       3.5,
+			Description: "Moderate rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 47288,
+				G: 64250,
+				B: 0,
+				A: 0,
+			},
+			Value:       5,
+			Description: "Moderate rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 63993,
+				G: 64250,
+				B: 0,
+				A: 0,
+			},
+			Value:       10,
+			Description: "Heavy rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 65278,
+				G: 50886,
+				B: 0,
+				A: 0,
+			},
+			Value:       15,
+			Description: "Heavy rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 65278,
+				G: 33924,
+				B: 0,
+				A: 0,
+			},
+			Value:       32.5,
+			Description: "Heavy rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 65535,
+				G: 15934,
+				B: 257,
+				A: 0,
+			},
+			Value:       50,
+			Description: "Very heavy rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 54227,
+				G: 0,
+				B: 0,
+				A: 0,
+			},
+			Value:       75,
+			Description: "Very heavy rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 46517,
+				G: 771,
+				B: 771,
+				A: 0,
+			},
+			Value:       100,
+			Description: "Very heavy rainfall.",
+		},
+		{
+			Color: color.RGBA64{
+				R: 52171,
+				G: 0,
+				B: 52428,
+				A: 0,
+			},
+			Value:       150,
+			Description: "Probable hail.",
+		},
 	}
 }

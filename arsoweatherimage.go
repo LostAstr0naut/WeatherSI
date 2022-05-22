@@ -1,6 +1,8 @@
 package arsoweatherimage
 
 import (
+	"errors"
+	"image"
 	"image/gif"
 	"net/http"
 
@@ -9,41 +11,65 @@ import (
 )
 
 const (
-	dataURL      = "http://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif"
-	radious      = 25
+	// the image resource URL
+	dataURL = "http://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif"
+
+	// radious represents the square area that will be scanned
+	radious = 25
+
+	// radiousInner represents the square area within radious that will be scanned
 	radiousInner = 5
 )
 
-// GetRainfallRateLevels returns a rainfall rate level based on parameters
-func GetRainfallRateLevels(locationName string) (rainfallrate.Level, rainfallrate.Level, error) {
-	rainfallRateSvc := rainfallrate.New()
-	locationSvc := location.New()
+// RainfallRate returns rainfall rate levels based on radious and radiousInner parameters.
+// Returns rainfall rate on direct location and in general area.
+func RainfallRate(locationName string) (rainfallrate.Level, rainfallrate.Level, error) {
+	if len(locationName) < 1 {
+		return rainfallrate.Level{}, rainfallrate.Level{}, errors.New("invalid location name")
+	}
 
-	foundLocation, err := locationSvc.GetCoordinates(locationName)
+	foundLocation, err := location.LocationCoordinates(locationName)
 	if err != nil {
 		return rainfallrate.Level{}, rainfallrate.Level{}, err
 	}
 
-	xLocation := int(foundLocation.X)
-	yLocation := int(foundLocation.Y)
-	x1 := int(xLocation - radious)
-	y1 := int(yLocation - radious)
-	x2 := int(xLocation + radious)
-	y2 := int(yLocation + radious)
-	x1Inner := int(xLocation - radiousInner)
-	y1Inner := int(yLocation - radiousInner)
-	x2Inner := int(xLocation + radiousInner)
-	y2Inner := int(yLocation + radiousInner)
-
-	resp, err := http.Get(dataURL)
+	dataImages, err := rainfallRateImages(dataURL)
 	if err != nil {
 		return rainfallrate.Level{}, rainfallrate.Level{}, err
+	}
+
+	return locationRainRate(foundLocation, dataImages, radious, radiousInner)
+}
+
+func rainfallRateImages(dataURL string) ([]*image.Paletted, error) {
+	resp, err := http.Get(dataURL)
+	if err != nil {
+		return []*image.Paletted{}, err
 	}
 
 	dataGif, err := gif.DecodeAll(resp.Body)
 	if err != nil {
+		return []*image.Paletted{}, err
 	}
-	dataImages := dataGif.Image
+
+	return dataGif.Image, nil
+}
+
+func locationRainRate(location location.Location, dataImages []*image.Paletted, radious, radiousInner int) (rainfallrate.Level, rainfallrate.Level, error) {
+	xLocation := int(location.X)
+	yLocation := int(location.Y)
+
+	// general area coordinates
+	x1 := int(xLocation - radious)
+	y1 := int(yLocation - radious)
+	x2 := int(xLocation + radious)
+	y2 := int(yLocation + radious)
+
+	// exact location coordinates
+	x1Inner := int(xLocation - radiousInner)
+	y1Inner := int(yLocation - radiousInner)
+	x2Inner := int(xLocation + radiousInner)
+	y2Inner := int(yLocation + radiousInner)
 
 	highestInAreaRateLevel := rainfallrate.Level{}
 	highestOnLocationRateLevel := rainfallrate.Level{}
@@ -52,7 +78,7 @@ func GetRainfallRateLevels(locationName string) (rainfallrate.Level, rainfallrat
 			for y := y1; y <= y2; y++ {
 				for x := x1; x <= x2; x++ {
 					r, g, b, _ := item.At(x, y).RGBA()
-					level, err := rainfallRateSvc.GetLevelByRGBA(uint16(r), uint16(g), uint16(b))
+					level, err := rainfallrate.LevelByRGBA(uint16(r), uint16(g), uint16(b))
 					if err != nil {
 						continue
 					}
@@ -70,5 +96,6 @@ func GetRainfallRateLevels(locationName string) (rainfallrate.Level, rainfallrat
 			}
 		}
 	}
-	return highestInAreaRateLevel, highestOnLocationRateLevel, nil
+
+	return highestOnLocationRateLevel, highestInAreaRateLevel, nil
 }

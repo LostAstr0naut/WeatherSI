@@ -4,21 +4,26 @@ import (
 	"errors"
 )
 
-// Service represents a location interface.
-type Service interface {
-	GetCoordinates(name string) (Location, error)
-}
-
-type service struct {
-	locations []Location
-}
-
-// New returns a new instance of location service.
-func New() Service {
-	instance := &service{}
-	instance.ensureLocations()
-	return instance
-}
+// Supported location names.
+const (
+	Bohinj        = "BO"
+	Gorica        = "GO"
+	Koper         = "KP"
+	Idrija        = "ID"
+	Jesenice      = "JE"
+	Postojna      = "PO"
+	Kranj         = "KR"
+	Ljubljana     = "LJ"
+	Kocevje       = "KO"
+	Trbovlje      = "TB"
+	SlovenjGradec = "SG"
+	NovoMesto     = "NM"
+	Celje         = "CE"
+	Krsko         = "KK"
+	Maribor       = "MB"
+	Ptuj          = "PT"
+	MurskaSobota  = "MS"
+)
 
 // Location represents a struct with data of location.
 type Location struct {
@@ -27,9 +32,9 @@ type Location struct {
 	Y    int32
 }
 
-func (s *service) GetCoordinates(name string) (Location, error) {
-	for _, location := range s.locations {
-		if location.Name == name {
+func LocationCoordinates(locationName string) (Location, error) {
+	for _, location := range locations() {
+		if location.Name == locationName {
 			return location, nil
 		}
 	}
@@ -37,30 +42,92 @@ func (s *service) GetCoordinates(name string) (Location, error) {
 	return Location{}, errors.New("location not found")
 }
 
-func (s *service) ensureLocations() {
-	s.locations = append(s.locations, createLocation("BO", 224, 290))
-	s.locations = append(s.locations, createLocation("GO", 237, 374))
-	s.locations = append(s.locations, createLocation("KP", 249, 464))
-	s.locations = append(s.locations, createLocation("ID", 296, 364))
-	s.locations = append(s.locations, createLocation("JE", 300, 268))
-	s.locations = append(s.locations, createLocation("PO", 325, 417))
-	s.locations = append(s.locations, createLocation("KR", 346, 311))
-	s.locations = append(s.locations, createLocation("LJ", 373, 350))
-	s.locations = append(s.locations, createLocation("KO", 424, 445))
-	s.locations = append(s.locations, createLocation("TB", 454, 332))
-	s.locations = append(s.locations, createLocation("SG", 459, 252))
-	s.locations = append(s.locations, createLocation("NM", 474, 410))
-	s.locations = append(s.locations, createLocation("CE", 484, 310))
-	s.locations = append(s.locations, createLocation("KK", 521, 374))
-	s.locations = append(s.locations, createLocation("MB", 545, 247))
-	s.locations = append(s.locations, createLocation("PT", 581, 270))
-	s.locations = append(s.locations, createLocation("MS", 625, 216))
-}
-
-func createLocation(name string, x, y int32) Location {
-	return Location{
-		Name: name,
-		X:    x,
-		Y:    y,
+func locations() []Location {
+	return []Location{
+		{
+			Name: Bohinj,
+			X:    224,
+			Y:    290,
+		},
+		{
+			Name: Gorica,
+			X:    237,
+			Y:    374,
+		},
+		{
+			Name: Koper,
+			X:    249,
+			Y:    464,
+		},
+		{
+			Name: Idrija,
+			X:    296,
+			Y:    364,
+		},
+		{
+			Name: Jesenice,
+			X:    300,
+			Y:    268,
+		},
+		{
+			Name: Postojna,
+			X:    325,
+			Y:    417,
+		},
+		{
+			Name: Kranj,
+			X:    346,
+			Y:    311,
+		},
+		{
+			Name: Ljubljana,
+			X:    373,
+			Y:    350,
+		},
+		{
+			Name: Kocevje,
+			X:    424,
+			Y:    445,
+		},
+		{
+			Name: Trbovlje,
+			X:    454,
+			Y:    332,
+		},
+		{
+			Name: SlovenjGradec,
+			X:    459,
+			Y:    252,
+		},
+		{
+			Name: NovoMesto,
+			X:    474,
+			Y:    410,
+		},
+		{
+			Name: Celje,
+			X:    484,
+			Y:    310,
+		},
+		{
+			Name: Krsko,
+			X:    521,
+			Y:    374,
+		},
+		{
+			Name: Maribor,
+			X:    545,
+			Y:    247,
+		},
+		{
+			Name: Ptuj,
+			X:    581,
+			Y:    270,
+		},
+		{
+			Name: MurskaSobota,
+			X:    625,
+			Y:    216,
+		},
 	}
 }
