@@ -30,7 +30,7 @@ const (
 	Ptuj          = "PT"
 	MurskaSobota  = "MS"
 
-	// the image resource URL
+	// image resource URL
 	dataURL = "http://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif"
 
 	// radious represents the square area that will be scanned
@@ -40,21 +40,26 @@ const (
 	radiousInner = 5
 )
 
+type RainfallRateLevel struct {
+	Value       float64
+	Description string
+}
+
 // RainfallRate returns rainfall rate levels based on radious and radiousInner parameters.
 // Returns rainfall rate on direct location and in general area.
-func RainfallRate(locationName string) (rainfallrate.Level, rainfallrate.Level, error) {
+func RainfallRate(locationName string) (RainfallRateLevel, RainfallRateLevel, error) {
 	if len(locationName) < 1 {
-		return rainfallrate.Level{}, rainfallrate.Level{}, errors.New("invalid location name")
+		return RainfallRateLevel{}, RainfallRateLevel{}, errors.New("invalid location name")
 	}
 
 	foundLocation, err := location.LocationCoordinates(locationName)
 	if err != nil {
-		return rainfallrate.Level{}, rainfallrate.Level{}, err
+		return RainfallRateLevel{}, RainfallRateLevel{}, err
 	}
 
 	dataImages, err := rainfallRateImages(dataURL)
 	if err != nil {
-		return rainfallrate.Level{}, rainfallrate.Level{}, err
+		return RainfallRateLevel{}, RainfallRateLevel{}, err
 	}
 
 	return locationRainfallRate(foundLocation, dataImages, radious, radiousInner)
@@ -74,7 +79,11 @@ func rainfallRateImages(dataURL string) ([]*image.Paletted, error) {
 	return dataGif.Image, nil
 }
 
-func locationRainfallRate(location location.Location, dataImages []*image.Paletted, radious, radiousInner int) (rainfallrate.Level, rainfallrate.Level, error) {
+func locationRainfallRate(
+	location location.Location,
+	dataImages []*image.Paletted,
+	radious, radiousInner int,
+) (RainfallRateLevel, RainfallRateLevel, error) {
 	xLocation := int(location.X)
 	yLocation := int(location.Y)
 
@@ -116,5 +125,13 @@ func locationRainfallRate(location location.Location, dataImages []*image.Palett
 		}
 	}
 
-	return highestOnLocationRateLevel, highestInAreaRateLevel, nil
+	return RainfallRateLevel{
+			Value:       highestOnLocationRateLevel.Value,
+			Description: highestOnLocationRateLevel.Description,
+		},
+		RainfallRateLevel{
+			Value:       highestInAreaRateLevel.Value,
+			Description: highestInAreaRateLevel.Description,
+		},
+		nil
 }
