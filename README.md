@@ -3,7 +3,11 @@ Converts current ARSO weather image into string data for given location.
 
 # Example
 ```golang
-location, area, err := arsoweatherimage.RainfallRate(arsoweatherimage.Maribor)
+location, area, err := arsoweatherimage.RainfallRate(
+	arsoweatherimage.Maribor,
+	arsoweatherimage.DefaultOnLocationRadious,
+	arsoweatherimage.DefaultInAreaRadious,
+)
 if err != nil {
   log.Fatal(err)
 }

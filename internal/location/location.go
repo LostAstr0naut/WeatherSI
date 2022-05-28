@@ -4,6 +4,27 @@ import (
 	"errors"
 )
 
+// Supported locations.
+const (
+	Bohinj        = "BO"
+	Gorica        = "GO"
+	Koper         = "KP"
+	Idrija        = "ID"
+	Jesenice      = "JE"
+	Postojna      = "PO"
+	Kranj         = "KR"
+	Ljubljana     = "LJ"
+	Kocevje       = "KO"
+	Trbovlje      = "TB"
+	SlovenjGradec = "SG"
+	NovoMesto     = "NM"
+	Celje         = "CE"
+	Krsko         = "KK"
+	Maribor       = "MB"
+	Ptuj          = "PT"
+	MurskaSobota  = "MS"
+)
+
 // Location represents a struct with data of location.
 type Location struct {
 	X int32
@@ -21,71 +42,71 @@ func LocationCoordinates(locationName string) (Location, error) {
 
 func locations() map[string]Location {
 	return map[string]Location{
-		"BO": {
+		Bohinj: {
 			X: 224,
 			Y: 290,
 		},
-		"GO": {
+		Gorica: {
 			X: 237,
 			Y: 374,
 		},
-		"KP": {
+		Koper: {
 			X: 249,
 			Y: 464,
 		},
-		"ID": {
+		Idrija: {
 			X: 296,
 			Y: 364,
 		},
-		"JE": {
+		Jesenice: {
 			X: 300,
 			Y: 268,
 		},
-		"PO": {
+		Postojna: {
 			X: 325,
 			Y: 417,
 		},
-		"KR": {
+		Kranj: {
 			X: 346,
 			Y: 311,
 		},
-		"LJ": {
+		Ljubljana: {
 			X: 373,
 			Y: 350,
 		},
-		"KO": {
+		Kocevje: {
 			X: 424,
 			Y: 445,
 		},
-		"TB": {
+		Trbovlje: {
 			X: 454,
 			Y: 332,
 		},
-		"SG": {
+		SlovenjGradec: {
 			X: 459,
 			Y: 252,
 		},
-		"NM": {
+		NovoMesto: {
 			X: 474,
 			Y: 410,
 		},
-		"CE": {
+		Celje: {
 			X: 484,
 			Y: 310,
 		},
-		"KK": {
+		Krsko: {
 			X: 521,
 			Y: 374,
 		},
-		"MB": {
+		Maribor: {
 			X: 545,
 			Y: 247,
 		},
-		"PT": {
+		Ptuj: {
 			X: 581,
 			Y: 270,
 		},
-		"MS": {
+		MurskaSobota: {
 			X: 625,
 			Y: 216,
 		},

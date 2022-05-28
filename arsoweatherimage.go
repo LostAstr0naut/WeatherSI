@@ -11,33 +11,35 @@ import (
 )
 
 const (
-	// Supported location names.
-	Bohinj        = "BO"
-	Gorica        = "GO"
-	Koper         = "KP"
-	Idrija        = "ID"
-	Jesenice      = "JE"
-	Postojna      = "PO"
-	Kranj         = "KR"
-	Ljubljana     = "LJ"
-	Kocevje       = "KO"
-	Trbovlje      = "TB"
-	SlovenjGradec = "SG"
-	NovoMesto     = "NM"
-	Celje         = "CE"
-	Krsko         = "KK"
-	Maribor       = "MB"
-	Ptuj          = "PT"
-	MurskaSobota  = "MS"
-
 	// image resource URL
 	dataURL = "http://meteo.arso.gov.si/uploads/probase/www/observ/radar/si0-rm-anim.gif"
 
-	// radious represents the square area that will be scanned
-	radious = 25
+	// DefaultOnLocationRadious represents the default square area within radious that will be scanned
+	DefaultOnLocationRadious = 5
 
-	// radiousInner represents the square area within radious that will be scanned
-	radiousInner = 5
+	// DefaultInAreaRadious represents the default square area that will be scanned
+	DefaultInAreaRadious = 25
+)
+
+// Supported location names.
+const (
+	Bohinj        = location.Bohinj
+	Gorica        = location.Gorica
+	Koper         = location.Koper
+	Idrija        = location.Idrija
+	Jesenice      = location.Jesenice
+	Postojna      = location.Postojna
+	Kranj         = location.Kranj
+	Ljubljana     = location.Ljubljana
+	Kocevje       = location.Kocevje
+	Trbovlje      = location.Trbovlje
+	SlovenjGradec = location.SlovenjGradec
+	NovoMesto     = location.NovoMesto
+	Celje         = location.Celje
+	Krsko         = location.Krsko
+	Maribor       = location.Maribor
+	Ptuj          = location.Ptuj
+	MurskaSobota  = location.MurskaSobota
 )
 
 type RainfallRateLevel struct {
@@ -45,24 +47,19 @@ type RainfallRateLevel struct {
 	Description string
 }
 
-// RainfallRate returns rainfall rate levels based on radious and radiousInner parameters.
-// Returns rainfall rate on direct location and in general area.
-func RainfallRate(locationName string) (RainfallRateLevel, RainfallRateLevel, error) {
+func validate(locationName string, onLocationRadious, inAreaRadious int) error {
+	var err error
 	if len(locationName) < 1 {
-		return RainfallRateLevel{}, RainfallRateLevel{}, errors.New("invalid location name")
+		err = errors.New("invalid location name")
+	} else if onLocationRadious < 0 {
+		err = errors.New("invalid on location radious")
+	} else if inAreaRadious < 0 {
+		err = errors.New("invalid in area radious")
+	} else if inAreaRadious < onLocationRadious {
+		err = errors.New("in area radious cannot be smaller then on location radious")
 	}
 
-	foundLocation, err := location.LocationCoordinates(locationName)
-	if err != nil {
-		return RainfallRateLevel{}, RainfallRateLevel{}, err
-	}
-
-	dataImages, err := rainfallRateImages(dataURL)
-	if err != nil {
-		return RainfallRateLevel{}, RainfallRateLevel{}, err
-	}
-
-	return locationRainfallRate(foundLocation, dataImages, radious, radiousInner)
+	return err
 }
 
 func rainfallRateImages(dataURL string) ([]*image.Paletted, error) {
@@ -134,4 +131,24 @@ func locationRainfallRate(
 			Description: highestInAreaRateLevel.Description,
 		},
 		nil
+}
+
+// RainfallRate returns rainfall rate levels based on radious and radiousInner parameters.
+// Returns rainfall rate on direct location and in general area.
+func RainfallRate(locationName string, onLocationRadious, inAreaRadious int) (RainfallRateLevel, RainfallRateLevel, error) {
+	if err := validate(locationName, onLocationRadious, inAreaRadious); err != nil {
+		return RainfallRateLevel{}, RainfallRateLevel{}, err
+	}
+
+	foundLocation, err := location.LocationCoordinates(locationName)
+	if err != nil {
+		return RainfallRateLevel{}, RainfallRateLevel{}, err
+	}
+
+	dataImages, err := rainfallRateImages(dataURL)
+	if err != nil {
+		return RainfallRateLevel{}, RainfallRateLevel{}, err
+	}
+
+	return locationRainfallRate(foundLocation, dataImages, onLocationRadious, inAreaRadious)
 }
